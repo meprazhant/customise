@@ -1,0 +1,79 @@
+"use client";
+import React, { useEffect, useState } from "react";
+
+function IphoneCases({ phone }) {
+  const [data, setData] = React.useState(null);
+  const [startIndex, setStartIndex] = useState(0); // Tracks the starting index of the visible items
+  const itemsPerSlide = 4;
+
+  const handleNextSlide = () => {
+    if (startIndex + itemsPerSlide < data.length) {
+      setStartIndex(startIndex + 1); // Move forward by one item
+    }
+  };
+
+  const handlePrevSlide = () => {
+    if (startIndex > 0) {
+      setStartIndex(startIndex - 1); // Move backward by one item
+    }
+  };
+
+  useEffect(() => {
+    // filter the phone so that templateImg is not null
+    const filteredPhone = phone.models.filter((item) => !!item.templateImg);
+    setData(filteredPhone);
+  }, [phone]);
+
+  if (data?.length === 0) {
+    return null;
+  }
+
+  return (
+    <div className="flex flex-col  justify-center">
+      <h1 className="text-xl font-bold text-black">{phone.name} CASES</h1>
+      <div className="relative mt-4 w-full overflow-hidden">
+        <div className="flex">
+          {data
+            ?.slice(startIndex, startIndex + itemsPerSlide) // Show only the visible slice
+            .map((item, index) => (
+              <div
+                key={index}
+                className="flex-shrink-0 w-1/4 p-2 flex flex-col items-center"
+              >
+                  <div className="relative bg-gray-400 rounded-md border border-gray-400 flex flex-col items-center">
+                    <img
+                      src={item.templateImg}
+                      alt={item.name}
+                      className="w-[320px] object-contain"
+                    />
+                    <h2 className="text-lg font-semibold absolute left-2 bottom-2 text-gray-800">
+                      {item.name}
+                    </h2>
+                  </div>
+              </div>
+            ))}
+        </div>
+
+        {/* Navigation Buttons */}
+        {startIndex > 0 && (
+          <button
+            onClick={handlePrevSlide}
+            className="absolute top-1/2 -translate-y-1/2 left-0 bg-black text-white px-2 py-2 h-10 w-10 rounded-full hover:bg-gray-800 transition"
+          >
+            ←
+          </button>
+        )}
+        {startIndex + itemsPerSlide < data?.length && (
+          <button
+            onClick={handleNextSlide}
+            className="absolute top-1/2 -translate-y-1/2 right-0 bg-black text-white px-2 py-2 h-10 w-10 rounded-full hover:bg-gray-800 transition"
+          >
+            →
+          </button>
+        )}
+      </div>
+    </div>
+  );
+}
+
+export default IphoneCases;
