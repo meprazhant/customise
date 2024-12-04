@@ -9,29 +9,29 @@ const Types = [
     image:
       "https://i.pinimg.com/originals/a7/45/ba/a745ba950094af9f7a7e9370bc6eed13.png",
     title: "Airpods",
-    link: "/airpods",
+    link: "/c/airpods",
   },
   {
     image: "https://static.thenounproject.com/png/63390-200.png",
     title: "Mouse Pads",
-    link: "/mousepads",
+    link: "/c/mousepads",
   },
   {
     image: "https://cdn2.iconfinder.com/data/icons/device-26/100/01-512.png",
     title: "Phone Cases",
-    link: "/phonecases",
+    link: "/c/phonecases",
   },
   {
     image:
       "https://cdn3.iconfinder.com/data/icons/bags-thick-outline/100/Notebook-512.png",
     title: "Laptop Sleevess",
-    link: "/laptopsleeves",
+    link: "/c/laptopsleeves",
   },
   {
     image:
       "https://i.pinimg.com/originals/1c/db/2d/1cdb2d68b9f6451a434b68511e2e3748.png",
     title: "Popsockets",
-    link: "/popsockets",
+    link: "/c/popsockets",
   },
 ];
 

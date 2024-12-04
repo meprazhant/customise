@@ -1,4 +1,5 @@
 'use client'
+import Link from 'next/link'
 import React from 'react'
 
 function HomeTYpes({
@@ -24,7 +25,7 @@ function HomeTYpes({
           <img src={type.image} alt={type.title} className="h-20" />
           <h1 className="text-lg font-bold">{type.title}</h1>
           <button className="bg-red-600 rounded-full text-white shadow-md px-5 py-2">
-            <a href={type.link}>Customise</a>
+            <Link href={type.link}>Customise</Link>
           </button>
         </div>
       ))}
