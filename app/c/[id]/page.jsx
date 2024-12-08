@@ -3,7 +3,7 @@ import CustomiseMainPhone from "@/components/Editor/phone/CustomiseMainPhone";
 import React from "react";
 
 async function getCustomise() {
-  const res = await fetch("http://localhost:3000/api/customise", {
+  const res = await fetch("https://customise.vercel.app/api/customise", {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
