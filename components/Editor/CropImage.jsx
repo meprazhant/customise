@@ -3,7 +3,7 @@ import React, { useEffect, useRef } from "react";
 import Cropper from "cropperjs";
 import "cropperjs/dist/cropper.css"; // Ensure Cropper CSS is imported
 
-function CropImage({ image, setCropedPic, aspect, setShowCrop }) {
+function CropImage({ image, setCropedPic, aspect }) {
   const imgref = useRef(null);
 
   useEffect(() => {
@@ -11,6 +11,9 @@ function CropImage({ image, setCropedPic, aspect, setShowCrop }) {
       autoCrop: false,
       aspectRatio: aspect[0] / aspect[1],
       crop(event) {
+        saveCrop(event);
+      },
+      cropend(event) {
         saveCrop(event);
       },
     });
