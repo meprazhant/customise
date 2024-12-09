@@ -4,7 +4,6 @@ import { useCart } from "@/context/cartContext";
 
 function Sidebar({ show, setShow }) {
   const { cartItems, removeItemFromCart } = useCart();
-  console.log(cartItems)
   const ref = useRef(null);
 
   if (!show) {
@@ -66,6 +65,9 @@ function Sidebar({ show, setShow }) {
                     <img src={item?.image} alt={item?.name} className="h-10 w-10 object-cover rounded-md" />
                     <div className="flex flex-col gap-1">
                       <h3 className="text-sm font-semibold capitalize">{item?.name}</h3>
+                      <p className="text-xs text-gray-600">
+                        {item?.variant}
+                      </p>
                       <p className="text-xs text-gray-600">
                         NPR. {item?.price}
                       </p>

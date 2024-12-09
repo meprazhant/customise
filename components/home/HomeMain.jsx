@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import HomeTYpes from "./HomeTYpes";
 import HomeFeatures from "./HomeFeatures";
 import PhoneCases from "./Cases";
+import { GetAllPhone } from "@/functions/GetAllPhone";
 
 const Types = [
   {
@@ -38,22 +39,15 @@ const Types = [
 function HomeMain() {
   const [cases, setCases] = useState([]);
 
-  function getCustomiseCases() {
-    const requestOptions = {
-      method: "GET",
-      redirect: "follow",
-    };
-
-    fetch("https://casemandu-api.casemandu.com.np/api/phones", requestOptions)
-      .then((response) => response.json())
-      .then((result) => {
-        setCases(result);
-      })
-      .catch((error) => console.error(error));
+  async function fetchCases() {
+   const res = await GetAllPhone();
+    setCases(res)
   }
 
+
   useEffect(() => {
-    getCustomiseCases();
+    fetchCases();
+
   }, []);
 
   function scrollToTypes(){
@@ -109,7 +103,7 @@ function HomeMain() {
       <HomeFeatures />
 
       <div className="flex flex-col gap-5">
-        {cases.length > 0 && (
+        {!!cases && cases.length > 0 && (
           <div className="flex flex-col gap-4 justify-center items-center py-5 px-3 bg-gray-100">
             <h1 className="text-3xl font-bold">Customise Your Phone Case</h1>
             <div className="flex flex-wrap gap-5 justify-center py-5 px-3">

@@ -1,18 +1,8 @@
 import EditorMain from "@/components/Editor/EditorMain";
-import CustomiseMainPhone from "@/components/Editor/phone/CustomiseMainPhone";
+import { GetAllPhone } from "@/functions/GetAllPhone";
 import React from "react";
 
-async function getCustomise() {
-  const res = await fetch("https://customise.vercel.app/api/customise", {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    cache: "no-store",
-  });
-  const data = await res.json();
-  return data;
-}
+
 
 async function page({ params }) {
   const { id } = await params;
@@ -30,8 +20,8 @@ async function page({ params }) {
   let product = [];
 
   if (id === "phonecases") {
-    const data = await getCustomise();
-    product = data?.data;
+    const data = await GetAllPhone();
+    product = data;
   }
 
   return (

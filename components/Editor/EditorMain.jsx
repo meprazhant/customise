@@ -1,8 +1,6 @@
 "use client";
 import Link from "next/link";
 import React, { useEffect, useRef, useState } from "react";
-import CropImage from "./CropImage";
-import PhoneModal from "./phone/PhoneModal";
 import { useCart } from "@/context/cartContext";
 import { UploadImage } from "@/functions/UploadImage";
 
@@ -37,7 +35,7 @@ const Designs = [
     price: 150,
   },
   {
-    image: "https://i.ibb.co/PDMTbdG/image.png",
+    image: "https://i.ibb.co/ZJ4T6y2/iphone-11-pro-and-11-pro-max.png",
     title: "phonecases",
     aspect: [0.52, 1],
     id: 5,
@@ -49,6 +47,11 @@ function EditorMain({ id, phone, product }) {
   const [image, setImage] = useState(null);
   const { addItemToCart } = useCart();
   const [loading, setLoading] = useState(false);
+  const [brand, setBrand] = useState("");
+  const [models, setModels] = useState([]);
+  const [model, setModel] = useState("");
+  const [singleModel, setSingleModel] = useState(null);
+  const [activeVariant, setActiveVariant] = useState(null);
 
   useEffect(() => {
     const editor = document.getElementById("editor");
@@ -58,6 +61,23 @@ function EditorMain({ id, phone, product }) {
   const design = Designs.find((design) => design?.title === id);
   const imgref = useRef(null);
 
+  useEffect(() => {
+    if (!brand) return;
+    if (!!brand) {
+      const filtered = product.filter((item) => item._id === brand);
+      setModels(filtered[0]?.models);
+    }
+  }, [brand]);
+
+  useEffect(() => {
+    if (!!model) {
+      const filtered = models.filter((item) => item._id === model);
+      setSingleModel(filtered[0]);
+      const variant = filtered[0]?.caseTypes[0]?._id
+      setActiveVariant(variant);
+    }
+  }, [model]);
+
   async function handleAddToCart() {
     if (!image) return alert("Please upload an image");
     setLoading(true);
@@ -66,19 +86,19 @@ function EditorMain({ id, phone, product }) {
       setLoading(false);
       return alert("Failed to upload image");
     }
-    console.log(img);
+
     const data = {
-      name: design.title,
+      name: !phone ? design.title : singleModel?.name,
       qty: 1,
       image: img?.data?.url,
-      variant: "custom",
+      variant: !phone ? "custom" : singleModel?.caseTypes.find((item) => item._id === activeVariant)?.name,
       id: Math.floor(Math.random() * 1000),
-      price: design.price,
+      price: !phone ? design.price : singleModel?.caseTypes.find((item) => item._id === activeVariant)?.price,
     };
     addItemToCart(data);
-      alert("Item added to cart");
-      setImage(null);
-      setLoading(false);
+    alert("Item added to cart");
+    setImage(null);
+    setLoading(false);
   }
 
   if (!design) return <h1>Design not found</h1>;
@@ -105,7 +125,7 @@ function EditorMain({ id, phone, product }) {
         {/* preview Screen */}
         <div
           className="
-                 md:w-1/2 w-full   rounded-md  bg-white flex justify-center items-center h-full
+                 md:w-1/2 w-full relative   rounded-md  bg-white flex justify-center items-center h-full
                 "
         >
           <div
@@ -114,37 +134,40 @@ function EditorMain({ id, phone, product }) {
               width: `${design?.aspect[0] * 500}px`,
             }}
           >
-            {(!phone && (
-              <div className="flex bg-red-400">
-                <img
-                  onDoubleClick={() => {
-                    document.getElementById("file").click();
-                  }
-                  }
-                  ref={imgref}
-                  src={`${design?.image}`}
-                  alt="preview"
-                  className="z-20 w-full object-contain bg-red-400 "
-                  style={{
-                    backgroundImage:
-                      (!!image && `url(${URL.createObjectURL(image)})`) ||
-                      "url(https://i.ibb.co/TqJNrL0/custom-Design.png)",
-                    backgroundSize: "cover",
-                    backgroundRepeat: "no-repeat",
-                    backgroundPosition: "center",
-                  }}
-                />
-              </div>
-            )) || (
-              // if phone
-              <div className="flex justify-center items-center h-full">
-                <PhoneModal data={product[0]} />
-              </div>
-            )}
-            <div className="absolute z-30 bottom-0 left-0 w-full bg-purple text-white p-2 rounded-md">
-              The Preview Screen may not be accurate. Please check the image
-              before ordering
+            <div
+              className="flex overflow-hidden "
+              style={{
+                backgroundImage:
+                  (!!image && `url(${URL.createObjectURL(image)})`) ||
+                  "url(https://i.ibb.co/TqJNrL0/custom-Design.png)",
+                backgroundSize: "cover",
+                backgroundRepeat: "no-repeat",
+                backgroundPosition: "center",
+              }}
+            >
+              <img
+                onDoubleClick={() => {
+                  document.getElementById("file").click();
+                }}
+                ref={imgref}
+                src={`${
+                  !!singleModel
+                    ? singleModel?.templateImg ||
+                      "https://i.ibb.co/TqJNrL0/custom-Design.png"
+                    : design?.image
+                }`}
+                alt="preview"
+                className="z-20 w-full object-contain "
+                style={{
+                  marginBottom: phone ? "20px" : "0px",
+                  transform: phone ? "scale(1.7)" : "scale(1)",
+                }}
+              />
             </div>
+          </div>
+          <div className="absolute z-30 -bottom-20 left-0 w-full bg-purple text-white p-2 rounded-md">
+            The Preview Screen may not be accurate. Please check the image
+            before ordering
           </div>
         </div>
 
@@ -156,22 +179,86 @@ function EditorMain({ id, phone, product }) {
             </h1>
             <div className="h-[1px] w-full bg-gray-300"></div>
             <p className="text-black/80 md:text-3xl text-xl font-bold ">
-              Rs: {design?.price}
+              Rs: {!activeVariant ? design?.price : singleModel?.caseTypes.find((item) => item._id === activeVariant)?.price}
             </p>
             <div className="h-[1px] w-full bg-gray-300"></div>
-
             {/* write a short description */}
-            {(!!design?.desc && (
-              <p className="text-sm text-gray-900/80">{design?.desc}</p>
-            )) || (
-              <p className="text-sm text-gray-700/80 ">
-                How to customise your {design?.title}? <br />
-                1. Click on the upload button below <br />
-                2. Resize and adjust the image <br />
-                3. Upload your image <br />
-                4. Click on the Order button <br />
-                5. Fill in the details and place the order
-              </p>
+            {!phone && (
+              <div className="flex">
+                {(!!design?.desc && (
+                  <p className="text-sm text-gray-900/80">{design?.desc}</p>
+                )) || (
+                  <p className="text-sm text-gray-700/80 ">
+                    How to customise your {design?.title}? <br />
+                    1. Click on the upload button below <br />
+                    2. Resize and adjust the image <br />
+                    3. Upload your image <br />
+                    4. Click on the Order button <br />
+                    5. Fill in the details and place the order
+                  </p>
+                )}
+              </div>
+            )}
+
+            {/* Phone model */}
+            {phone && (
+              <div className="flex flex-col gap-5">
+                <div className="flex flex-col gap-2">
+                  <div className="flex gap-2">
+                    <p className="text-gray-900">Select Brand </p>
+                    <span className="text-red-500">*</span>
+                  </div>
+                  <select
+                    onChange={(e) => setBrand(e.target.value)}
+                    className="w-full p-2 border border-gray-300 rounded-md"
+                  >
+                    <option value="">Select Brand</option>
+                    {product.map((phone) => (
+                      <option key={phone._id} value={phone._id}>
+                        {phone.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div className="flex flex-col gap-2">
+                  <div className="flex gap-2">
+                    <p className="text-gray-900">Select Model </p>
+                    <span className="text-red-500">*</span>
+                  </div>
+                  <select
+                    onChange={(e) => {
+                      if (e.target.value === "") return;
+                      setModel(e.target.value);
+                    }}
+                    className="w-full p-2 border border-gray-300 rounded-md"
+                  >
+                    <option value="">Select Model</option>
+                    {models?.map((phone) => (
+                      <option key={phone._id} value={phone._id}>
+                        {phone.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+            )}
+
+            {!!phone && !!singleModel && (
+              <div className="flex flex-flex-wrap gap-2">
+                {singleModel?.caseTypes?.map((type, index) => (
+                  <div
+                    key={index}
+                    className="flex gap-2 flex-col justify-center items-center"
+                  >
+                    <div
+                      onClick={() => setActiveVariant(type._id)}
+                    className={`flex border duration-300 cursor-pointer border-black p-2 ${activeVariant === type._id ? "bg-black text-white" : "bg-transparent text-black" }  `}>
+                      {type?.name}
+                    </div>
+                    <p className="text-gray-900">Rs: {type?.price}</p>
+                  </div>
+                ))}
+              </div>
             )}
 
             {/* images */}
@@ -285,34 +372,36 @@ function EditorMain({ id, phone, product }) {
           </div>
         </div>
       </div>
-     {(loading) && <div className="fixed z-50 top-0 left-0 h-full w-full bg-black/50 backdrop-grayscale flex justify-center items-center">
-        <div className="bg-white p-5 rounded-md shadow-md flex-col flex gap-3">
-          <div className="flex justify-center items-center">
-            <svg
-              className="animate-spin h-10 w-10 text-blue-600"
-              xmlns="http://www.w3.org/
+      {loading && (
+        <div className="fixed z-50 top-0 left-0 h-full w-full bg-black/50 backdrop-grayscale flex justify-center items-center">
+          <div className="bg-white p-5 rounded-md shadow-md flex-col flex gap-3">
+            <div className="flex justify-center items-center">
+              <svg
+                className="animate-spin h-10 w-10 text-blue-600"
+                xmlns="http://www.w3.org/
               2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-            >
-              <circle
-                className="opacity-25"
-                cx="12"
-                cy="12"
-                r="10"
-                stroke="currentColor"
-                strokeWidth="4"
-              ></circle>
-              <path
-                className="opacity-75"
-                fill="currentColor"
-                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
-              ></path>
-            </svg>
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <circle
+                  className="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  strokeWidth="4"
+                ></circle>
+                <path
+                  className="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+                ></path>
+              </svg>
+            </div>
+            <h1 className="text-2xl font-bold">Adding Items to cart...</h1>
           </div>
-          <h1 className="text-2xl font-bold">Adding Items to cart...</h1>
         </div>
-      </div>}
+      )}
     </div>
   );
 }
