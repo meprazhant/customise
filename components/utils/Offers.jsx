@@ -51,7 +51,7 @@ function Offers() {
   }
 
   return (
-    <div className="flex trems-center justify-between bg-gray-900 text-white px-5 p-2 items-center">
+    <div className="flex trems-center justify-between bg-purple text-white px-5 p-2 items-center">
         <div className="flex"></div>
         <div className="flex items-center gap-2 justify-between w-full px-5">
           <button
@@ -60,7 +60,7 @@ function Offers() {
                 (currentPromo - 1 + promos.length) % promos.length
               )
             }
-            className="p-2 bg-transparent border hover:bg-gray-600 duration-300 cursor-pointer border-gray-600  text-white rounded-full"
+            className="p-2 h-10 w-10 font-bold bg-pink-500/30 border hover:bg-purple duration-300 cursor-pointer border-gray-600  text-white rounded-full"
           >
             &lt;
           </button>
@@ -72,7 +72,7 @@ function Offers() {
           </div>
           <button
             onClick={() => setCurrentPromo((currentPromo + 1) % promos.length)}
-            className="p-2 bg-transparent border hover:bg-gray-600 duration-300 cursor-pointer border-gray-600  text-white rounded-full"
+            className="p-2 h-10 w-10 font-bold  bg-pink-500/30 border hover:bg-purple duration-300 cursor-pointer border-gray-600  text-white rounded-full"
           >
             &gt;
           </button>

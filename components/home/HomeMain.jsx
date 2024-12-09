@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import HomeTYpes from "./HomeTYpes";
 import HomeFeatures from "./HomeFeatures";
-import IphoneCases from "./Cases";
+import PhoneCases from "./Cases";
 
 const Types = [
   {
@@ -48,7 +48,6 @@ function HomeMain() {
       .then((response) => response.json())
       .then((result) => {
         setCases(result);
-        console.log(result);
       })
       .catch((error) => console.error(error));
   }
@@ -114,8 +113,8 @@ function HomeMain() {
           <div className="flex flex-col gap-4 justify-center items-center py-5 px-3 bg-gray-100">
             <h1 className="text-3xl font-bold">Customise Your Phone Case</h1>
             <div className="flex flex-wrap gap-5 justify-center py-5 px-3">
-              {cases.slice(0,5).map((phone, index) => (
-                <IphoneCases key={index} phone={phone} />
+              {cases.map((phone, index) => (
+                <PhoneCases key={index} phone={phone} />
               ))}
             </div>
           </div>

@@ -1,9 +1,11 @@
 "use client";
 import React, { useEffect, useState } from "react";
 
-function IphoneCases({ phone }) {
+function PhoneCases({ phone }) {
   const [data, setData] = React.useState(null);
   const [startIndex, setStartIndex] = useState(0); // Tracks the starting index of the visible items
+  const [loading, setLoading] = useState(true)
+  const [image, setImage] = useState(null)
   const itemsPerSlide = 4;
 
   const handleNextSlide = () => {
@@ -22,11 +24,24 @@ function IphoneCases({ phone }) {
     // filter the phone so that templateImg is not null
     const filteredPhone = phone.models.filter((item) => !!item.templateImg);
     setData(filteredPhone);
+
   }, [phone]);
+
+  useEffect(()=>{
+
+    const random = Math.floor(Math.random()*1000)
+    const img = `https://picsum.photos/800/1600?random=${random}`
+    setImage(img)
+    if(img){
+      setLoading(false)
+    }
+  },[])
 
   if (data?.length === 0) {
     return null;
   }
+
+  if(loading) return null
 
   return (
     <div className="flex flex-col  justify-center">
@@ -44,9 +59,15 @@ function IphoneCases({ phone }) {
                     <img
                       src={item.templateImg}
                       alt={item.name}
-                      className="w-[320px] object-contain"
+                      className="h-[420px] object-contain"
+                      style={{
+                        backgroundImage:!!image && `url(${image + Math.floor(Math.random()*1000) })`,
+                        backgroundSize:'cover',
+                        backgroundRepeat:'no-repeat',
+
+                      }}
                     />
-                    <h2 className="text-lg font-semibold absolute left-2 bottom-2 text-gray-800">
+                    <h2 className="text-sm font-semibold  absolute left-2 bottom-2 text-gray-800">
                       {item.name}
                     </h2>
                   </div>
@@ -76,4 +97,4 @@ function IphoneCases({ phone }) {
   );
 }
 
-export default IphoneCases;
+export default PhoneCases;
