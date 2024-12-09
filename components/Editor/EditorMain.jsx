@@ -35,7 +35,7 @@ const Designs = [
     price: 150,
   },
   {
-    image: "https://i.ibb.co/ZJ4T6y2/iphone-11-pro-and-11-pro-max.png",
+    image: "https://i.ibb.co/tYZn2VV/template.png",
     title: "phonecases",
     aspect: [0.52, 1],
     id: 5,
@@ -73,7 +73,7 @@ function EditorMain({ id, phone, product }) {
     if (!!model) {
       const filtered = models.filter((item) => item._id === model);
       setSingleModel(filtered[0]);
-      const variant = filtered[0]?.caseTypes[0]?._id
+      const variant = filtered[0]?.caseTypes[0]?._id;
       setActiveVariant(variant);
     }
   }, [model]);
@@ -91,9 +91,15 @@ function EditorMain({ id, phone, product }) {
       name: !phone ? design.title : singleModel?.name,
       qty: 1,
       image: img?.data?.url,
-      variant: !phone ? "custom" : singleModel?.caseTypes.find((item) => item._id === activeVariant)?.name,
+      variant: !phone
+        ? "custom"
+        : singleModel?.caseTypes.find((item) => item._id === activeVariant)
+            ?.name,
       id: Math.floor(Math.random() * 1000),
-      price: !phone ? design.price : singleModel?.caseTypes.find((item) => item._id === activeVariant)?.price,
+      price: !phone
+        ? design.price
+        : singleModel?.caseTypes.find((item) => item._id === activeVariant)
+            ?.price,
     };
     addItemToCart(data);
     alert("Item added to cart");
@@ -119,7 +125,7 @@ function EditorMain({ id, phone, product }) {
       <div
         id="editor"
         className="
-         py-5 flex flex-col md:flex-row items-center justify-center bg-gray-100 gap-4
+         py-5 flex flex-col md:flex-row items-center justify-center  gap-4
         "
       >
         {/* preview Screen */}
@@ -129,13 +135,13 @@ function EditorMain({ id, phone, product }) {
                 "
         >
           <div
-            className="relative bg-white  "
+            className="relative bg-red-500  "
             style={{
               width: `${design?.aspect[0] * 500}px`,
             }}
           >
             <div
-              className="flex overflow-hidden "
+              className="flex overflow-hidden  bg-red-300 "
               style={{
                 backgroundImage:
                   (!!image && `url(${URL.createObjectURL(image)})`) ||
@@ -153,15 +159,12 @@ function EditorMain({ id, phone, product }) {
                 src={`${
                   !!singleModel
                     ? singleModel?.templateImg ||
-                      "https://i.ibb.co/TqJNrL0/custom-Design.png"
+                      "https://i.ibb.co/tYZn2VV/template.png"
                     : design?.image
                 }`}
                 alt="preview"
                 className="z-20 w-full object-contain "
-                style={{
-                  marginBottom: phone ? "20px" : "0px",
-                  transform: phone ? "scale(1.7)" : "scale(1)",
-                }}
+                style={{}}
               />
             </div>
           </div>
@@ -179,7 +182,12 @@ function EditorMain({ id, phone, product }) {
             </h1>
             <div className="h-[1px] w-full bg-gray-300"></div>
             <p className="text-black/80 md:text-3xl text-xl font-bold ">
-              Rs: {!activeVariant ? design?.price : singleModel?.caseTypes.find((item) => item._id === activeVariant)?.price}
+              Rs:{" "}
+              {!activeVariant
+                ? design?.price
+                : singleModel?.caseTypes.find(
+                    (item) => item._id === activeVariant
+                  )?.price}
             </p>
             <div className="h-[1px] w-full bg-gray-300"></div>
             {/* write a short description */}
@@ -252,7 +260,12 @@ function EditorMain({ id, phone, product }) {
                   >
                     <div
                       onClick={() => setActiveVariant(type._id)}
-                    className={`flex border duration-300 cursor-pointer border-black p-2 ${activeVariant === type._id ? "bg-black text-white" : "bg-transparent text-black" }  `}>
+                      className={`flex border duration-300 cursor-pointer border-black p-2 ${
+                        activeVariant === type._id
+                          ? "bg-black text-white"
+                          : "bg-transparent text-black"
+                      }  `}
+                    >
                       {type?.name}
                     </div>
                     <p className="text-gray-900">Rs: {type?.price}</p>
