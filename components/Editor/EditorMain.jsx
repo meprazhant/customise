@@ -117,6 +117,10 @@ function EditorMain({ id, phone, product }) {
             {(!phone && (
               <div className="flex bg-red-400">
                 <img
+                  onDoubleClick={() => {
+                    document.getElementById("file").click();
+                  }
+                  }
                   ref={imgref}
                   src={`${design?.image}`}
                   alt="preview"
@@ -193,7 +197,7 @@ function EditorMain({ id, phone, product }) {
                 </div>
               )}
             </div>
-            <div className="flex gap-2 justify-center items-center p-5 border-dashed rounded-md ">
+            <div className="flex flex-wrap gap-2 justify-center items-center p-5 border-dashed rounded-md ">
               <input
                 disabled={loading}
                 onChange={(e) => {
@@ -208,7 +212,7 @@ function EditorMain({ id, phone, product }) {
               <label
                 htmlFor="file"
                 className="
-                          bg-blue-600 text-white px-5 py-2 rounded-md cursor-pointer hover:bg-blue-800 duration-300
+                          md:w-auto w-full flex items-center justify-center bg-purple text-white px-5 py-2 rounded-md cursor-pointer hover:bg-purple/80 duration-300
                           "
               >
                 <svg
@@ -226,7 +230,7 @@ function EditorMain({ id, phone, product }) {
                   <g id="SVGRepo_iconCarrier">
                     {" "}
                     <path
-                      className="animate-pulse"
+                      className="upDown"
                       d="M12 15L12 2M12 2L15 5.5M12 2L9 5.5"
                       stroke="#ffffff5c"
                       strokeWidth="1.5"
@@ -248,7 +252,7 @@ function EditorMain({ id, phone, product }) {
                   onClick={handleAddToCart}
                   disabled={loading}
                   className="
-                          bg-green-600 text-white px-5 py-2 rounded-md cursor-pointer hover:bg-green-800 duration-300
+                          md:w-auto w-full bg-green-600 text-white px-5 py-2 rounded-md cursor-pointer hover:bg-green-800 duration-300
                           "
                 >
                   <svg

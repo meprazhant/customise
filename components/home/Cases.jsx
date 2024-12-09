@@ -47,13 +47,13 @@ function PhoneCases({ phone }) {
     <div className="flex flex-col  justify-center">
       <h1 className="text-xl font-bold text-black">{phone.name} CASES</h1>
       <div className="relative mt-4 w-full overflow-hidden">
-        <div className="flex">
+        <div className="grid w-full xl:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-4 transition-transform duration-300 ease-in-out transform">
           {data
             ?.slice(startIndex, startIndex + itemsPerSlide) // Show only the visible slice
             .map((item, index) => (
               <div
                 key={index}
-                className="flex-shrink-0 w-1/4 p-2 flex flex-col items-center"
+                className="0 w-full p-2 flex flex-col items-center"
               >
                   <div className="relative bg-gray-400 rounded-md border border-gray-400 flex flex-col items-center">
                     <img
@@ -75,23 +75,44 @@ function PhoneCases({ phone }) {
             ))}
         </div>
 
-        {/* Navigation Buttons */}
+        <div className="md:hidden flex justify-between p-2 items-center">
         {startIndex > 0 && (
-          <button
-            onClick={handlePrevSlide}
-            className="absolute top-1/2 -translate-y-1/2 left-0 bg-black text-white px-2 py-2 h-10 w-10 rounded-full hover:bg-gray-800 transition"
-          >
-            ←
-          </button>
-        )}
-        {startIndex + itemsPerSlide < data?.length && (
-          <button
-            onClick={handleNextSlide}
-            className="absolute top-1/2 -translate-y-1/2 right-0 bg-black text-white px-2 py-2 h-10 w-10 rounded-full hover:bg-gray-800 transition"
-          >
-            →
-          </button>
-        )}
+            <button
+              onClick={handlePrevSlide}
+              className=" bg-black text-white px-2 py-2 h-10 w-10 rounded-full hover:bg-gray-800 transition"
+            >
+              ←
+            </button>
+          )}
+          {startIndex + itemsPerSlide < data?.length && (
+            <button
+              onClick={handleNextSlide}
+              className=" bg-black text-white px-2 py-2 h-10 w-10 rounded-full hover:bg-gray-800 transition"
+            >
+              →
+            </button>
+          )}
+            </div>
+
+     
+        <div className="md:block hidden">
+          {startIndex > 0 && (
+            <button
+              onClick={handlePrevSlide}
+              className="absolute top-1/2 -translate-y-1/2 left-0 bg-black text-white px-2 py-2 h-10 w-10 rounded-full hover:bg-gray-800 transition"
+            >
+              ←
+            </button>
+          )}
+          {startIndex + itemsPerSlide < data?.length && (
+            <button
+              onClick={handleNextSlide}
+              className="absolute top-1/2 -translate-y-1/2 right-0 bg-black text-white px-2 py-2 h-10 w-10 rounded-full hover:bg-gray-800 transition"
+            >
+              →
+            </button>
+          )}
+        </div>
       </div>
     </div>
   );
