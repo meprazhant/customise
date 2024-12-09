@@ -6,7 +6,7 @@ import { UploadImage } from "@/functions/UploadImage";
 
 const Designs = [
   {
-    image: "https://i.ibb.co/PDMTbdG/image.png",
+    image: "https://i.ibb.co/9n8Yckw/airpods.png",
     title: "airpods",
     aspect: [1, 1],
     id: 1,
@@ -14,21 +14,21 @@ const Designs = [
     desc: `Compatible for Apple AirPods 2nd 1st charging case. 0.25mm see-through thin wall allows you to check the indicator status any time. Precise cutouts for easy access to all functions without any interference`,
   },
   {
-    image: "https://i.ibb.co/jhxVBv8/MOUSEPAD-TEMPLETE-UPDATED.png",
+    image: "https://i.ibb.co/p1td84k/mousepad.png",
     title: "mousepads",
     aspect: [1, 0.43],
     id: 2,
     price: 1150,
   },
   {
-    image: "https://i.ibb.co/qY1SVXS/laptop.png",
+    image: "https://i.ibb.co/PrnPTW3/laptop-Sleeves.png",
     title: "laptopsleeves",
     aspect: [1, 1],
     id: 3,
     price: 1150,
   },
   {
-    image: "https://i.ibb.co/dMxR0Kg/POP-SOCKET-TEPLETE-UPDATED.png",
+    image: "https://i.ibb.co/bNjYR0z/popsocket.png",
     title: "popsockets",
     aspect: [1, 1],
     id: 4,
@@ -52,6 +52,10 @@ function EditorMain({ id, phone, product }) {
   const [model, setModel] = useState("");
   const [singleModel, setSingleModel] = useState(null);
   const [activeVariant, setActiveVariant] = useState(null);
+  const [laptopSize, setLaptopSize] = useState({
+    height: 0,
+    width: 0,
+  });
 
   useEffect(() => {
     const editor = document.getElementById("editor");
@@ -80,6 +84,11 @@ function EditorMain({ id, phone, product }) {
 
   async function handleAddToCart() {
     if (!image) return alert("Please upload an image");
+    if (
+      id === "laptopsleeves" &&
+      (laptopSize.height === 0 || laptopSize.width === 0)
+    )
+      return alert("Please enter the size of your laptop");
     setLoading(true);
     const img = await UploadImage(image);
     if (!img.success) {
@@ -87,12 +96,17 @@ function EditorMain({ id, phone, product }) {
       return alert("Failed to upload image");
     }
 
+    const variant =
+      id === "laptopsleeves"
+        ? `Height : ${laptopSize?.height} , Width : ${laptopSize?.width} (In Inches)`
+        : "Custom Design";
+
     const data = {
       name: !phone ? design.title : singleModel?.name,
       qty: 1,
       image: img?.data?.url,
       variant: !phone
-        ? "custom"
+        ? variant
         : singleModel?.caseTypes.find((item) => item._id === activeVariant)
             ?.name,
       id: Math.floor(Math.random() * 1000),
@@ -105,6 +119,8 @@ function EditorMain({ id, phone, product }) {
     alert("Item added to cart");
     setImage(null);
     setLoading(false);
+    setActiveVariant(null);
+    setLaptopSize({ height: 0, width: 0 });
   }
 
   if (!design) return <h1>Design not found</h1>;
@@ -205,6 +221,49 @@ function EditorMain({ id, phone, product }) {
                     5. Fill in the details and place the order
                   </p>
                 )}
+              </div>
+            )}
+            {/* laptop sleeves */}
+            {id === "laptopsleeves" && (
+              <div className="flex flex-col  gap-5">
+                <p className="text-gray-900">
+                  Enter the size of your laptop (in Inches)
+                </p>
+                <div className="flex gap-3 items-center">
+                  <div className="flex flex-col gap-2">
+                    <div className="flex gap-2">
+                      <p className="text-gray-900">Height </p>
+                      <span className="text-red-500">*</span>
+                    </div>
+                    <input
+                      onChange={(e) => {
+                        if (isNaN(e.target.value)) return;
+                        setLaptopSize({
+                          ...laptopSize,
+                          height: e.target.value,
+                        });
+                      }}
+                      defaultValue={laptopSize.height}
+                      type="text"
+                      className="w-full p-2 border border-gray-300 rounded-md"
+                    />
+                  </div>
+                  <div className="flex flex-col gap-2">
+                    <div className="flex gap-2">
+                      <p className="text-gray-900">Width </p>
+                      <span className="text-red-500">*</span>
+                    </div>
+                    <input
+                      defaultValue={laptopSize.width}
+                      onChange={(e) => {
+                        if (isNaN(e.target.value)) return;
+                        setLaptopSize({ ...laptopSize, width: e.target.value });
+                      }}
+                      type="text"
+                      className="w-full p-2 border border-gray-300 rounded-md"
+                    />
+                  </div>
+                </div>
               </div>
             )}
 
