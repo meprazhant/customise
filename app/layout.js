@@ -4,6 +4,7 @@ import Navbar from "@/components/utils/Navbar";
 import Offers from "@/components/utils/Offers";
 import {Poppins} from "next/font/google"
 import { CartProvider } from "@/context/cartContext";
+import Releasing from "@/components/releasing/Releasing";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -28,19 +29,27 @@ export const metadata = {
 };
 
 const poppins = Poppins({subsets: ["latin"],  weight: '400',})
+const released = false
+
 
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <CartProvider>
 
+        {released && 
+
       <body
-        className={`${poppins.className}   antialiased`}
+      className={`${poppins.className}   antialiased`}
         >
         <Offers/>
         <Navbar />
         {children}
       </body>
+     || <body className={`${PoppinsRegular.className} antialiased`}>
+          <Releasing/>
+          </body>
+     }
         </CartProvider>
     </html>
   );
